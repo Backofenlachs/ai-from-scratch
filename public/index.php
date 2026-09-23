@@ -132,7 +132,7 @@ $app->get( '/', function (Request $request, Response $response): Response {
  */
 $app->get('/ai', function (Request $request, Response $response): Response {
 
-    $neuron = new Neuron(
+    $n1 = new Neuron(
         weights: [
             0.5,
             -0.2,
@@ -140,10 +140,19 @@ $app->get('/ai', function (Request $request, Response $response): Response {
         ],
         bias: 0.1
     );
+    $n2 = new Neuron(
+        weights: [
+            -0.5,
+            0.2,
+            0.8
+        ],
+        bias: -0.1
+    );
 
     $network = new NeuralNetwork(
         neurons: [
-            $neuron
+            $n1,
+            $n2
         ]
     );
 

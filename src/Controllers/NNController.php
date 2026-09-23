@@ -26,14 +26,15 @@ class NNController {
 
         $inputs = array_map('floatval', explode(',', $queryParams['inputs']));
 
-        $outputs = $this->network->forward($inputs);
+        $outsAndLog = $this->network->forward($inputs);
 
         return ApiResponse::success(
             response: $response,
             data: [
                 'inputs' => $inputs,
-                'outputs' => $outputs
-            ]
+                'outputs' => $outsAndLog['outputs']
+            ],
+            debug: $outsAndLog['log']
         );
     }
 }

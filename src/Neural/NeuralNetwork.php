@@ -5,6 +5,7 @@ namespace App\Neural;
 use InvalidArgumentException;
 
 class NeuralNetwork {
+    private int $pass = 0;
 
     public function __construct(
         private array $neurons
@@ -21,11 +22,16 @@ class NeuralNetwork {
      */
     public function forward(array $inputs): array {
         $outputs = [];
+        $log = [];
 
-        foreach($this->neurons as $neuron) {
+        foreach($this->neurons as $index => $neuron) {
             $outputs[] = $neuron->calculate($inputs);
+            
+            $log[] = sprintf("[NN] pass=%d layer=%d neuron=%d net=%f out=%f", $this->pass, 0, $index, $neuron->net, $neuron->output);
         }
 
-        return $outputs;
+        $this->pass++;
+
+        return ['outputs' => $outputs, 'log' => $log];
     }
 }

@@ -6,8 +6,8 @@ use InvalidArgumentException;
 
 class Neuron {
     // very important for backpropagation analisys later
-    private float $net = 0.0; 
-    private float $output = 0.0;
+    public float $net = 0.0; 
+    public float $output = 0.0;
 
     public function __construct(
         private array $weights,
@@ -22,11 +22,11 @@ class Neuron {
         $this->net = $this->bias;
 
         foreach($inputs as $index => $input) {
-            $net += $input * $this->weights[$index];
+            $this->net += $input * $this->weights[$index];
         }
 
 
-        $this->output = $this->sigmoid($net);
+        $this->output = $this->sigmoid($this->net);
         return $this->output;
     }
 
