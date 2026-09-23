@@ -6,8 +6,17 @@ use InvalidArgumentException;
 
 class Neuron {
     // very important for backpropagation analisys later
-    public float $net = 0.0; 
-    public float $output = 0.0;
+    private array $inputs;
+    public function getInputs(): array { return $this->inputs; }
+    
+    private float $net = 0.0; 
+    public function getNet(): float { return $this->net; }
+
+    private float $output = 0.0;
+    public function getOutputs(): float { return $this->output; }
+
+    public function getWeights(): array { return $this->weights; }
+    public function getBias(): float { return $this->bias; }
 
     public function __construct(
         private array $weights,
@@ -19,6 +28,7 @@ class Neuron {
             throw new InvalidArgumentException('Input count must match weight count.');
         }
 
+        $this->inputs = $inputs;
         $this->net = $this->bias;
 
         foreach($inputs as $index => $input) {
@@ -33,4 +43,6 @@ class Neuron {
     private function sigmoid(float $value): float {
         return 1 / (1 + exp(-$value));
     }
+
+
 }

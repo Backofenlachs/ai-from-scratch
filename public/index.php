@@ -11,6 +11,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use App\Responses\ApiResponse;
 use App\Controllers\NNController;
+use App\Neural\Layer;
 use App\Neural\NeuralNetwork;
 use App\Neural\Neuron;
 
@@ -131,29 +132,17 @@ $app->get( '/', function (Request $request, Response $response): Response {
  * Neuron Aufbau siehe: docs/simple-neuron.pdf
  */
 $app->get('/ai', function (Request $request, Response $response): Response {
-
-    $n1 = new Neuron(
-        weights: [
-            0.5,
-            -0.2,
-            0.8
-        ],
-        bias: 0.1
-    );
-    $n2 = new Neuron(
-        weights: [
-            -0.5,
-            0.2,
-            0.8
-        ],
-        bias: -0.1
-    );
-
+    /**
+     * Network topology:
+     * 3 → 5 → 5 → 3 → 4
+     */
     $network = new NeuralNetwork(
-        neurons: [
-            $n1,
-            $n2
-        ]
+        layers: [
+            new Layer(3, 5),
+            new Layer(5, 5),
+            new Layer(5, 3),
+            new Layer(3, 4)
+        ]  
     );
 
     $controller = new NNController(

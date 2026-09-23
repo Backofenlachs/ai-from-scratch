@@ -8,26 +8,60 @@ class NeuralNetwork {
     private int $pass = 0;
 
     public function __construct(
-        private array $neurons
+        private array $layers
     ) {
-        if (empty($neurons)) {
-            throw new InvalidArgumentException('Neural network requires at leas one neuron');
+        if ($layers === []) {
+            throw new InvalidArgumentException('Neural network requires at leas one layer');
+        }
+
+        foreach ($layers as $layer) {
+            if (!$layer instanceof Layer) {
+                throw new InvalidArgumentException('All layers must be instances of Layer');
+            }
         }
     }
 
-    /** currently
-     * input1 ─┬──> neuron1 ──> output1
-     * input2 ─┤
-     * input3 ─┘
+    /**
+     * Forward pass:
+     *
+     * [input1, input2, input3]
+     *          ↓
+     *      Layer 0
+     *     ○   ○   ○
+     *          ↓
+     *      Layer 1
+     *       ○   ○
+     *          ↓
+     *      Layer 2
+     *         ○
+     *          ↓
+     *       output
+     *
+     * The output of each layer becomes the input
+     * of the following layer.
      */
     public function forward(array $inputs): array {
         $outputs = [];
         $log = [];
 
-        foreach($this->neurons as $index => $neuron) {
-            $outputs[] = $neuron->calculate($inputs);
+        $currentValues = $inputs;
+        foreach($this->layers as $index => $layer) {
+            $currentValues = $layer->forward($currentValues);
             
-            $log[] = sprintf("[NN] pass=%d layer=%d neuron=%d net=%f out=%f", $this->pass, 0, $index, $neuron->net, $neuron->output);
+            $outputs[$index] = $currentValues;
+            
+            foreach($layer->neurons as $neuronIndex => $neuron){
+                $log[] = sprintf(
+                    "[NN] pass=%d layer=%d neuron=%d in=[%s] w=[%s] net=%f out=%f",
+                    $this->pass,
+                    $index,
+                    $neuronIndex,
+                    implode(', ', array_map(fn($v) => number_format($v, 4), $neuron->getInputs())),
+                    implode(', ', array_map(fn($v) => number_format($v, 4), $neuron->getWeights())),
+                    $neuron->getNet(),
+                    $neuron->getOutputs()
+                );
+            }
         }
 
         $this->pass++;
