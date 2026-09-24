@@ -2,6 +2,7 @@
 
 namespace App\Neural;
 
+use Exception;
 use InvalidArgumentException;
 
 class Neuron {
@@ -15,11 +16,11 @@ class Neuron {
     private float $output = 0.0;
     public function getOutputs(): float { return $this->output; }
 
+    private array $weights = [];
     public function getWeights(): array { return $this->weights; }
     public function getBias(): float { return $this->bias; }
 
     public function __construct(
-        private array $weights,
         private float $bias = 0.0
     ) {}
 
@@ -38,6 +39,24 @@ class Neuron {
 
         $this->output = $this->sigmoid($this->net);
         return $this->output;
+    }
+
+    public function generateRandomWeights(int $count): array {
+        if ($count <= 0) {
+            throw new InvalidArgumentException("[Neuron] weight count must be greater than zero");
+        }
+
+        if ($this->weights !== []) {
+            throw new Exception('[Neuron] weights already set');
+        }
+
+        $randWeights = [];
+        for($i=0; $i<$count; $i++) {
+            $randWeights[] = random_int(-9, 9)/10;
+        }
+        
+        $this->weights = $randWeights;
+        return $randWeights;
     }
 
     private function sigmoid(float $value): float {

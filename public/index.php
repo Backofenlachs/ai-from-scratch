@@ -13,7 +13,6 @@ use App\Responses\ApiResponse;
 use App\Controllers\NNController;
 use App\Neural\Layer;
 use App\Neural\NeuralNetwork;
-use App\Neural\Neuron;
 
 // --------------------------------------------------
 // App

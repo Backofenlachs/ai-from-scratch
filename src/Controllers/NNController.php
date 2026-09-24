@@ -26,7 +26,12 @@ class NNController {
 
         $inputs = array_map('floatval', explode(',', $queryParams['inputs']));
 
+        $start = hrtime(true);
         $outsAndLog = $this->network->forward($inputs);
+        $end = hrtime(true);
+
+        $durationNs = $end - $start;
+        $durationMs = $durationNs / 1_000_000;
 
         return ApiResponse::success(
             response: $response,
@@ -34,7 +39,10 @@ class NNController {
                 'inputs' => $inputs,
                 'outputs' => $outsAndLog['outputs']
             ],
-            debug: $outsAndLog['log']
+            debug: [
+                'forward_time_in_ms' => $durationMs,
+                'log' => $outsAndLog['log']
+            ]
         );
     }
 }

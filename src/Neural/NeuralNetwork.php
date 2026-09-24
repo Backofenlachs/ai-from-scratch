@@ -23,20 +23,6 @@ class NeuralNetwork {
 
     /**
      * Forward pass:
-     *
-     * [input1, input2, input3]
-     *          ↓
-     *      Layer 0
-     *     ○   ○   ○
-     *          ↓
-     *      Layer 1
-     *       ○   ○
-     *          ↓
-     *      Layer 2
-     *         ○
-     *          ↓
-     *       output
-     *
      * The output of each layer becomes the input
      * of the following layer.
      */
@@ -52,12 +38,13 @@ class NeuralNetwork {
             
             foreach($layer->neurons as $neuronIndex => $neuron){
                 $log[] = sprintf(
-                    "[NN] pass=%d layer=%d neuron=%d in=[%s] w=[%s] net=%f out=%f",
+                    "[NN] pass=%d layer=%d neuron=%d in=[%s] w=[%s] bias=%f net=%f out=%f",
                     $this->pass,
                     $index,
                     $neuronIndex,
                     implode(', ', array_map(fn($v) => number_format($v, 4), $neuron->getInputs())),
                     implode(', ', array_map(fn($v) => number_format($v, 4), $neuron->getWeights())),
+                    $neuron->getBias(),
                     $neuron->getNet(),
                     $neuron->getOutputs()
                 );
